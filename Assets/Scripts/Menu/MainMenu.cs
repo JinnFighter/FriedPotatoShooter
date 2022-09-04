@@ -1,10 +1,15 @@
+using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     [field: SerializeField] public Button HostButton { get; private set; }
     [field: SerializeField] public Button JoinButton { get; private set; }
+
+    [SerializeField] private NetworkRunner _runner;
+    private bool _hasSelected;
     
     // Start is called before the first frame update
     void Start()
@@ -21,11 +26,32 @@ public class MainMenu : MonoBehaviour
 
     private void OnJoinButtonClicked()
     {
-        Debug.Log("Joining Room");
+        if (!_hasSelected)
+        {
+            _hasSelected = true;
+            StartGame(GameMode.Client);
+        }
     }
 
     private void OnHostButtonClicked()
     {
-        Debug.Log("Hosting Room");
+        if (!_hasSelected)
+        {
+            _hasSelected = true;
+            StartGame(GameMode.Host);
+        }
+    }
+    
+    private async void StartGame(GameMode gameMode)
+    {
+        _runner.ProvideInput = true;
+
+        await _runner.StartGame(new StartGameArgs
+        {
+            GameMode = gameMode,
+            SessionName = "TestRoom",
+            Scene = SceneManager.GetSceneByName("Gameplay").buildIndex,
+            SceneManager = _runner.gameObject.AddComponent<NetworkSceneManagerDefault>(),
+        });
     }
 }
