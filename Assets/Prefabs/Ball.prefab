@@ -85,6 +85,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 5084386197073420862}
+  - {fileID: 5084386197073420801}
   SimulationBehaviours: []
 --- !u!135 &5084386197073420800
 SphereCollider:
@@ -111,6 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c767a56746e0c844397d86706110f32d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
 --- !u!1 &5084386197582742376
 GameObject:
   m_ObjectHideFlags: 0
