@@ -1,0 +1,19 @@
+{
+    "name": "Startups",
+    "rootNamespace": "",
+    "references": [
+        "GUID:656c2c43d3cfe4855bd40e058874b0be",
+        "GUID:0104ae351448541ee9a4ab55eb9d8b69",
+        "GUID:735f8da4caf242840823cba0ac91f75f",
+        "GUID:2468366ef97e3f74cae49d4d31d33282"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
