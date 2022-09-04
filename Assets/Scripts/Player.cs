@@ -1,4 +1,6 @@
+using System;
 using Fusion;
+using TMPro;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
@@ -6,6 +8,7 @@ public class Player : NetworkBehaviour
     private NetworkCharacterControllerPrototype _cc;
     [SerializeField] private Ball _ballPrefab;
     [SerializeField] private PhysicsBall _physicsBallPrefab;
+    [SerializeField] private TextMeshProUGUI _text;
     
     [Networked(OnChanged = nameof(OnBallSpawned))]
     public NetworkBool Spawned { get; set; }
@@ -82,5 +85,33 @@ public class Player : NetworkBehaviour
     public override void Render()
     {
         Material.color = Color.Lerp(Material.color, Color.blue, Time.deltaTime);
+    }
+
+    private void Update()
+    {
+        if (Object.HasInputAuthority && Input.GetKeyDown(KeyCode.R))
+        {
+            RPC_SendMessage("Hello, Mate!");
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    private void RPC_SendMessage(string message, RpcInfo info = default)
+    {
+        if (_text == null)
+        {
+            _text = FindObjectOfType<TextMeshProUGUI>();
+        }
+
+        if (info.IsInvokeLocal)
+        {
+            message = $"You said: {message}\n";
+        }
+        else
+        {
+            message = $"Someone else said: {message}\n";
+        }
+
+        _text.text += message;
     }
 }
