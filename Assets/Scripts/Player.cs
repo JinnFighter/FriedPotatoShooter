@@ -1,5 +1,4 @@
 using Fusion;
-using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
@@ -8,7 +7,25 @@ public class Player : NetworkBehaviour
     [SerializeField] private Ball _ballPrefab;
     [SerializeField] private PhysicsBall _physicsBallPrefab;
     
+    [Networked(OnChanged = nameof(OnBallSpawned))]
+    public NetworkBool Spawned { get; set; }
+    
     [Networked] private TickTimer _delay { get; set; }
+
+    private Material _material;
+
+    public Material Material
+    {
+        get
+        {
+            if (_material == null)
+            {
+                _material = GetComponentInChildren<MeshRenderer>().material;
+            }
+
+            return _material;
+        }
+    }
 
     private Vector3 _forward;
 
@@ -16,6 +33,11 @@ public class Player : NetworkBehaviour
     {
         _cc = GetComponent<NetworkCharacterControllerPrototype>();
         _forward = transform.forward;
+    }
+
+    public static void OnBallSpawned(Changed<Player> changed)
+    {
+        changed.Behaviour.Material.color = Color.white;
     }
 
     public override void FixedUpdateNetwork()
@@ -40,6 +62,7 @@ public class Player : NetworkBehaviour
                         {
                             o.GetComponent<Ball>().Init();
                         });
+                    Spawned = !Spawned;
                 }
                 else if ((data.Buttons & NetworkInputData.MouseButton2) != 0)
                 {
@@ -50,8 +73,14 @@ public class Player : NetworkBehaviour
                         {
                             o.GetComponent<PhysicsBall>().Init(10 * _forward);
                         });
+                    Spawned = !Spawned;
                 }
             }
         }
+    }
+
+    public override void Render()
+    {
+        Material.color = Color.Lerp(Material.color, Color.blue, Time.deltaTime);
     }
 }
