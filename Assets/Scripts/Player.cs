@@ -1,10 +1,12 @@
 using Fusion;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : NetworkBehaviour
 {
     private NetworkCharacterControllerPrototype _cc;
     [SerializeField] private Ball _ballPrefab;
+    [SerializeField] private PhysicsBall _physicsBallPrefab;
     
     [Networked] private TickTimer _delay { get; set; }
 
@@ -37,6 +39,16 @@ public class Player : NetworkBehaviour
                         Object.InputAuthority, (runner, o) =>
                         {
                             o.GetComponent<Ball>().Init();
+                        });
+                }
+                else if ((data.Buttons & NetworkInputData.MouseButton2) != 0)
+                {
+                    _delay = TickTimer.CreateFromSeconds(Runner, 0.5f);
+                    Runner.Spawn(_physicsBallPrefab, transform.position + _forward, Quaternion.LookRotation(_forward),
+                        Object.InputAuthority,
+                        (runner, o) =>
+                        {
+                            o.GetComponent<PhysicsBall>().Init(10 * _forward);
                         });
                 }
             }
