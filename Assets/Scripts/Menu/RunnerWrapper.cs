@@ -14,12 +14,13 @@ public class RunnerWrapper : MonoBehaviour, INetworkRunnerCallbacks
     {
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+        _runner.AddCallbacks(this);
 
         var res = await _runner.StartGame(new StartGameArgs
         {
             GameMode = gameMode,
             SessionName = "TestRoom",
-            Scene = SceneManager.GetSceneByPath("Scenes/Gameplay").buildIndex,
+            Scene = 1,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
         });
         
